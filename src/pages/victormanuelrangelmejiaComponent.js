@@ -15,7 +15,7 @@ const Victormanuelrangelmejia = () => {
   const content = `Estudiante de desarrollo de software`;
 
   // Genera la URL de la imagen desde el servidor backend
-  const imageUrl = `http://localhost:5000/uploads/6761f027077e4a218586334d-victormanuelrangelmejia.webp`;
+  const imageUrl = `https://backdigime.onrender.com/uploads/6761f027077e4a218586334d-victormanuelrangelmejia.webp`;
 
   return (
     <ClientTemplate
