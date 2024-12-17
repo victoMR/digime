@@ -1,0 +1,38 @@
+name: Auto Commit New User Components
+
+on:
+  push:
+    paths:
+      - 'digime/src/pages/*.js'  # Updated path to match the exact location
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
+    
+    - name: Configure Git
+      run: |
+        git config --global user.name 'GitHub Actions Bot'
+        git config --global user.email 'actions@github.com'
+    
+    - name: Check for new files
+      id: check_files
+      run: |
+        NEW_FILES=$(git status --porcelain | grep -E "^A.*\.js$" | grep -E "digime/src/pages/" || true)
+        if [ -n "$NEW_FILES" ]; then
+          echo "new_files=true" >> $GITHUB_OUTPUT
+        else
+          echo "new_files=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Commit new user components
+      if: steps.check_files.outputs.new_files == 'true'
+      run: |
+        git add digime/src/pages/*.js
+        git commit -m "Add new user components"
+        git push
