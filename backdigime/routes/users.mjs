@@ -246,7 +246,7 @@ router.post(
 
       // Genera el componente
       const componentContent = generateUserComponent(newUser);
-      const componentsDir = path.join(process.cwd(), "../../digime/src/pages/");
+      const componentsDir = path.join(__dirname, "../../digime/src/pages/");
       await fs.mkdir(componentsDir, { recursive: true });
       const componentPath = path.join(componentsDir, `${username}Component.js`);
       await fs.writeFile(componentPath, componentContent);
