@@ -84,8 +84,6 @@ const optimizeImage = async (req, res, next) => {
   }
 };
 
-
-
 // Configure multer with enhanced options
 const upload = multer({
   storage: storage,
@@ -118,27 +116,28 @@ const cleanUsername = (username) => {
 };
 
 const formatUsername = (username) => {
-  return username
-    // Añade un espacio antes de cada letra mayúscula (pero no al inicio)
-    .replace(/([A-Z])/g, ' $1')
-    // Elimina el espacio inicial si lo hay
-    .trim()
-    // Formatea cada palabra: primera letra mayúscula, resto minúscula
-    .split(" ")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
+  return (
+    username
+      // Añade un espacio antes de cada letra mayúscula (pero no al inicio)
+      .replace(/([A-Z])/g, " $1")
+      // Elimina el espacio inicial si lo hay
+      .trim()
+      // Formatea cada palabra: primera letra mayúscula, resto minúscula
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ")
+  );
 };
-
 
 // Utility function to generate user component
 const generateUserComponent = (newUser) => {
-
-  
-  const username = formatUsername(newUser.username.charAt(0).toUpperCase() + newUser.username.slice(1));
+  const username = formatUsername(
+    newUser.username.charAt(0).toUpperCase() + newUser.username.slice(1)
+  );
 
   const ckeckUsernameFormat = (username) => {
     return /^[a-z0-9]+$/i.test(username);
-  }
+  };
   console.log(ckeckUsernameFormat(username));
 
   const pdfUrl = newUser.pdfUrl ? `'${newUser.pdfUrl}'` : "null";
@@ -237,12 +236,10 @@ router.post(
       if (req.file) {
         const finalImageName = `${newUser._id}-${username}.webp`;
         const finalImagePath = path.join(req.file.destination, finalImageName);
-      
+
         await fs.rename(req.file.optimizedPath, finalImagePath);
         newUser.imageFile = finalImageName;
       }
-      
-      
 
       // Genera el componente
       const componentContent = generateUserComponent(newUser);
@@ -323,10 +320,7 @@ router.put(
 
       // Regenerate component with updated information
       const componentContent = generateUserComponent(updatedUser);
-      const componentsDir = path.join(
-        process.cwd(),
-        "src/pages/UserComponents"
-      );
+      const componentsDir = path.join(__dirname, "../../digime/src/pages/");
       const componentPath = path.join(componentsDir, `${username}Component.js`);
       await fs.writeFile(componentPath, componentContent);
 
@@ -354,7 +348,7 @@ router.delete("/api/users/:username", async (req, res) => {
     }
 
     // Optionally, remove the user's component file
-    const componentsDir = path.join(process.cwd(), "src/pages/UserComponents");
+    const componentsDir = path.join(__dirname, "../../digime/src/pages/");
     const componentPath = path.join(componentsDir, `${username}Component.js`);
 
     try {
