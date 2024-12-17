@@ -11,8 +11,6 @@
 # production
 /build
 
-/backdigime
-
 # misc
 .DS_Store
 .env.local
